@@ -9,7 +9,6 @@
   background-color: var(--ms-brand-tint);
 }
 
-/* Recolour Bootstrap's primary button with our brand */
 .btn-primary {
   --bs-btn-bg: var(--ms-brand);
   --bs-btn-border-color: var(--ms-brand);
