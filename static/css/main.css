@@ -1,0 +1,20 @@
+/* MomentSnap brand colours */
+:root {
+  --ms-brand: #8a3b5c;
+  --ms-brand-dark: #6f2f4a;
+  --ms-brand-tint: #f8f1f4;
+}
+
+.hero {
+  background-color: var(--ms-brand-tint);
+}
+
+/* Recolour Bootstrap's primary button with our brand */
+.btn-primary {
+  --bs-btn-bg: var(--ms-brand);
+  --bs-btn-border-color: var(--ms-brand);
+  --bs-btn-hover-bg: var(--ms-brand-dark);
+  --bs-btn-hover-border-color: var(--ms-brand-dark);
+  --bs-btn-active-bg: var(--ms-brand-dark);
+  --bs-btn-active-border-color: var(--ms-brand-dark);
+}
