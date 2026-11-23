@@ -10,22 +10,41 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load variables from the .env file in the project folder, if it exists.
+# On the server there is no .env file: the host sets real environment variables.
+load_dotenv(BASE_DIR / ".env")
+
+
+def env_required(name):
+    """Return an environment variable, or stop with a clear error if it is missing."""
+    value = os.environ.get(name)
+    if not value:
+        raise ImproperlyConfigured(f"Missing required environment variable: {name}")
+    return value
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_&p+e7+j7vl(le674eq!8)5%hbxgip9s17oy^yq7naqn*6h%&q'
+SECRET_KEY = env_required("DJANGO_SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Safe default: DEBUG is OFF unless the environment explicitly turns it on.
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+# Comma-separated list in the environment -> Python list, ignoring empty entries.
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
+    if host.strip()
+]
 
 
 # Application definition
