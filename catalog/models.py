@@ -1,8 +1,17 @@
+import uuid
 from decimal import Decimal
+from pathlib import Path
 
-from django.core.validators import MinValueValidator
+from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 
+from core.validators import validate_image_size
+
+
+def item_image_path(instance, filename):
+    """Save item images as items/<random-name>.<ext>, ignoring the uploaded name."""
+    extension = Path(filename).suffix.lower()
+    return f"items/{uuid.uuid4().hex}{extension}"
 
 class Category(models.Model):
     """A catalogue category. A category with a parent is a sub-category."""
@@ -52,6 +61,16 @@ class Item(models.Model):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=170, unique=True)
     description = models.TextField()
+
+    image = models.ImageField(
+    upload_to=item_image_path,
+    blank=True,
+    validators=[
+        FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "webp"]),
+        validate_image_size,
+        ],
+    )
+
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
