@@ -4,6 +4,7 @@ from pathlib import Path
 
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
+from django.urls import reverse
 
 from core.validators import validate_image_size
 
@@ -35,6 +36,9 @@ class Category(models.Model):
         if self.parent:
             return f"{self.parent.name} › {self.name}"
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("catalog:category_items", args=[self.slug])
 
 
 class Item(models.Model):
@@ -92,3 +96,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("catalog:item_detail", args=[self.slug])

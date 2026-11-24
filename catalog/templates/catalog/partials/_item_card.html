@@ -1,0 +1,11 @@
+{# One product card. Expects `item`. Used in the shop, and later on home, search and recommendations. #}
+<article class="card h-100">
+  {% include "catalog/partials/_item_image.html" with lazy=True %}
+  <div class="card-body">
+    <p class="small text-body-secondary mb-1">{{ item.category.name }}</p>
+    <h2 class="h6 card-title">
+      <a href="{{ item.get_absolute_url }}" class="stretched-link text-reset text-decoration-none">{{ item.name }}</a>
+    </h2>
+    <p class="card-text fw-semibold mb-0">€{{ item.price }}</p>
+  </div>
+</article>

@@ -17,3 +17,8 @@
   --bs-btn-active-bg: var(--ms-brand-dark);
   --bs-btn-active-border-color: var(--ms-brand-dark);
 }
+
+.list-group {
+  --bs-list-group-active-bg: var(--ms-brand);
+  --bs-list-group-active-border-color: var(--ms-brand);
+}

@@ -1,0 +1,6 @@
+{# A category menu link. Expects `category`; pass sub=True for sub-categories. #}
+<a href="{{ category.get_absolute_url }}"
+   class="list-group-item list-group-item-action{% if sub %} ps-4{% else %} fw-semibold{% endif %}{% if category == current_category %} active{% endif %}"
+   {% if category == current_category %}aria-current="page"{% endif %}>
+  {{ category.name }}
+</a>

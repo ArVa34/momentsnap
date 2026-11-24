@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row g-4">
+
+    <aside class="col-lg-3" aria-label="Categories">
+      <h2 class="h6 text-uppercase text-body-secondary">Categories</h2>
+      <div class="list-group">
+        <a href="{% url 'catalog:item_list' %}"
+           class="list-group-item list-group-item-action{% if not current_category %} active{% endif %}"
+           {% if not current_category %}aria-current="page"{% endif %}>
+          All products
+        </a>
+        {% for category in categories %}
+          {% include "catalog/partials/_category_link.html" %}
+          {% for child in category.children.all %}
+            {% include "catalog/partials/_category_link.html" with category=child sub=True %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </aside>
+
+    <section class="col-lg-9" aria-labelledby="list-title">
+      <h1 id="list-title" class="h3 mb-4">{{ page_title }}</h1>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+        {% for item in items %}
+          <div class="col">
+            {% include "catalog/partials/_item_card.html" %}
+          </div>
+        {% empty %}
+          <p class="text-body-secondary">No products here yet.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
+</div>
+{% endblock %}

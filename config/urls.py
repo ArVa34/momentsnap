@@ -22,6 +22,7 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("core.urls")),
+    path("", include("catalog.urls")),
 ]
 
 # Only while developing: let Django serve uploaded files.
