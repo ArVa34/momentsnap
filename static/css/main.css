@@ -22,3 +22,10 @@
   --bs-list-group-active-bg: var(--ms-brand);
   --bs-list-group-active-border-color: var(--ms-brand);
 }
+
+.pagination {
+  --bs-pagination-color: var(--ms-brand);
+  --bs-pagination-hover-color: var(--ms-brand-dark);
+  --bs-pagination-active-bg: var(--ms-brand);
+  --bs-pagination-active-border-color: var(--ms-brand);
+}

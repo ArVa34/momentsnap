@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Category, Item
+from .models import Category, Item, SearchQuery
+
 
 
 @admin.register(Category)
@@ -17,3 +18,9 @@ class ItemAdmin(admin.ModelAdmin):
     list_filter = ["is_active", "event_type", "style", "category"]
     search_fields = ["name", "description"]
     prepopulated_fields = {"slug": ["name"]}
+
+@admin.register(SearchQuery)
+class SearchQueryAdmin(admin.ModelAdmin):
+    list_display = ["term", "results_count", "user", "searched_at"]
+    list_filter = ["searched_at"]
+    search_fields = ["term"]

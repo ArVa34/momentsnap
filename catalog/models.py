@@ -1,4 +1,5 @@
 import uuid
+from django.conf import settings
 from decimal import Decimal
 from pathlib import Path
 
@@ -99,3 +100,24 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         return reverse("catalog:item_detail", args=[self.slug])
+
+class SearchQuery(models.Model):
+    """One search made in the shop. Feeds the analytics dashboard and recommendations."""
+
+    term = models.CharField(max_length=100)
+    results_count = models.PositiveIntegerField()
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="searches",
+    )
+    searched_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "search queries"
+        ordering = ["-searched_at"]
+
+    def __str__(self):
+        return f'"{self.term}" ({self.results_count} results)'
