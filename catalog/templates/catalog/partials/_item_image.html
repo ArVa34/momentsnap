@@ -1,8 +1,9 @@
+{% load i18n %}
 {# Item image with placeholder. Expects `item`; pass lazy=True for images below the fold. #}
 <div class="ratio ratio-4x3 bg-body-secondary">
   {% if item.image %}
     <img src="{{ item.image.url }}" alt="{{ item.name }}" class="object-fit-cover"{% if lazy %} loading="lazy"{% endif %}>
   {% else %}
-    <div class="d-flex align-items-center justify-content-center text-body-secondary">No image yet</div>
+    <div class="d-flex align-items-center justify-content-center text-body-secondary">{% translate "No image yet" %}</div>
   {% endif %}
 </div>

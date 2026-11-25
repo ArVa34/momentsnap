@@ -1,8 +1,24 @@
-/* MomentSnap brand colours */
+/* MomentSnap design tokens: every brand colour and font lives here, nowhere else. */
 :root {
   --ms-brand: #8a3b5c;
   --ms-brand-dark: #6f2f4a;
   --ms-brand-tint: #f8f1f4;
+  --ms-on-brand: #ffffff;
+  --ms-font-display: "Playfair Display", Georgia, serif;
+
+  /* Bootstrap reads these variables across the whole site */
+  --bs-body-font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bs-link-color-rgb: 138, 59, 92;
+  --bs-link-hover-color-rgb: 111, 47, 74;
+}
+
+/* Display font for big headings and the logo */
+h1, .display-5, .navbar-brand, .font-display {
+  font-family: var(--ms-font-display);
+}
+
+.navbar-brand {
+  font-weight: 700;
 }
 
 .hero {
@@ -10,8 +26,10 @@
 }
 
 .btn-primary {
+  --bs-btn-color: var(--ms-on-brand);
   --bs-btn-bg: var(--ms-brand);
   --bs-btn-border-color: var(--ms-brand);
+  --bs-btn-hover-color: var(--ms-on-brand);
   --bs-btn-hover-bg: var(--ms-brand-dark);
   --bs-btn-hover-border-color: var(--ms-brand-dark);
   --bs-btn-active-bg: var(--ms-brand-dark);

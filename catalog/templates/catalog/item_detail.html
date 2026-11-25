@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}{{ item.name }} · MomentSnap{% endblock %}
 {% block meta_description %}{{ item.description|truncatewords:25 }}{% endblock %}
@@ -6,9 +7,9 @@
 {% block content %}
 <div class="container py-5">
 
-  <nav aria-label="breadcrumb">
+  <nav aria-label="{% translate 'Breadcrumb' %}">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'catalog:item_list' %}">Shop</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'catalog:item_list' %}">{% translate "Shop" %}</a></li>
       {% if item.category.parent %}
         <li class="breadcrumb-item"><a href="{{ item.category.parent.get_absolute_url }}">{{ item.category.parent.name }}</a></li>
       {% endif %}
@@ -29,14 +30,14 @@
       <p class="fs-4 fw-semibold">€{{ item.price }}</p>
 
       <dl class="row">
-        <dt class="col-sm-4">Event type</dt>
+        <dt class="col-sm-4">{% translate "Event type" %}</dt>
         <dd class="col-sm-8">{{ item.get_event_type_display }}</dd>
         {% if item.style %}
-          <dt class="col-sm-4">Style</dt>
+          <dt class="col-sm-4">{% translate "Style" %}</dt>
           <dd class="col-sm-8">{{ item.get_style_display }}</dd>
         {% endif %}
-        <dt class="col-sm-4">Availability</dt>
-        <dd class="col-sm-8">{% if item.stock > 0 %}In stock{% else %}Out of stock{% endif %}</dd>
+        <dt class="col-sm-4">{% translate "Availability" %}</dt>
+        <dd class="col-sm-8">{% if item.stock > 0 %}{% translate "In stock" %}{% else %}{% translate "Out of stock" %}{% endif %}</dd>
       </dl>
 
       <div class="mt-4">{{ item.description|linebreaks }}</div>

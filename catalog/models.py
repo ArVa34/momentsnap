@@ -1,14 +1,14 @@
 import uuid
-from django.conf import settings
 from decimal import Decimal
 from pathlib import Path
 
+from django.conf import settings
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from core.validators import validate_image_size
-
 
 def item_image_path(instance, filename):
     """Save item images as items/<random-name>.<ext>, ignoring the uploaded name."""
@@ -30,7 +30,7 @@ class Category(models.Model):
     )
 
     class Meta:
-        verbose_name_plural = "categories"
+        verbose_name_plural = _("categories")
         ordering = ["name"]
 
     def __str__(self):
@@ -46,17 +46,17 @@ class Item(models.Model):
     """A product in the catalogue."""
 
     class EventType(models.TextChoices):
-        ANY = "any", "Any event"
-        WEDDING = "wedding", "Wedding"
-        CHRISTENING = "christening", "Christening"
-        BIRTHDAY = "birthday", "Birthday"
-        CORPORATE = "corporate", "Corporate"
+        ANY = "any", _("Any event")
+        WEDDING = "wedding", _("Wedding")
+        CHRISTENING = "christening", _("Christening")
+        BIRTHDAY = "birthday", _("Birthday")
+        CORPORATE = "corporate", _("Corporate")
 
     class Style(models.TextChoices):
-        MINIMAL = "minimal", "Minimal"
-        FLORAL = "floral", "Floral"
-        RUSTIC = "rustic", "Rustic"
-        CLASSIC = "classic", "Classic"
+        MINIMAL = "minimal", _("Minimal")
+        FLORAL = "floral", _("Floral")
+        RUSTIC = "rustic", _("Rustic")
+        CLASSIC = "classic", _("Classic")
 
     category = models.ForeignKey(
         Category,
@@ -116,7 +116,7 @@ class SearchQuery(models.Model):
     searched_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = "search queries"
+        verbose_name_plural = _("search queries")
         ordering = ["-searched_at"]
 
     def __str__(self):

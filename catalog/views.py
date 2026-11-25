@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
+from django.utils.translation import gettext as _
 
 from .forms import ItemFilterForm
 from .models import Category, Item, SearchQuery
@@ -64,7 +65,7 @@ def item_list(request, category_slug=None):
     if form.is_valid() and form.cleaned_data["q"] and "page" not in request.GET:
         log_search(request, form.cleaned_data["q"], page_obj.paginator.count)
 
-    page_title = current_category.name if current_category else "All products"
+    page_title = current_category.name if current_category else _("All products")
 
     return render(request, "catalog/item_list.html", {
         "categories": categories,
