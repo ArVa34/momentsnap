@@ -175,3 +175,4 @@ if USE_HTTPS:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600  # raise to 31536000 (one year) once everything is stable
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
