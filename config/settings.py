@@ -176,3 +176,6 @@ if USE_HTTPS:
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600  # raise to 31536000 (one year) once everything is stable
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# HSTS preload is deliberately not used yet: being added to browsers' preload list is hard to undo.
+SILENCED_SYSTEM_CHECKS = ["security.W021"]
