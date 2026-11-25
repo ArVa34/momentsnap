@@ -40,12 +40,13 @@ SECRET_KEY = env_required("DJANGO_SECRET_KEY")
 # Safe default: DEBUG is OFF unless the environment explicitly turns it on.
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-# Comma-separated list in the environment -> Python list, ignoring empty entries.
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
-    if host.strip()
-]
+def env_list(name):
+    """Turn a comma-separated environment variable into a list, ignoring empty entries."""
+    return [item.strip() for item in os.environ.get(name, "").split(",") if item.strip()]
+
+
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 
 # Application definition
@@ -97,14 +98,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-# Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Database: SQLite, Django's default (as recommended).
+# On the server the file lives outside the project folder, set by DJANGO_DB_PATH.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.environ.get("DJANGO_DB_PATH", BASE_DIR / "db.sqlite3"),
+        "OPTIONS": {
+            # WAL: visitors can keep reading while someone else is writing.
+            "init_command": "PRAGMA journal_mode=WAL;",
+            # IMMEDIATE: a write waits its turn instead of failing with "database is locked".
+            "transaction_mode": "IMMEDIATE",
+        },
     }
 }
 
@@ -146,8 +153,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", BASE_DIR / "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -156,4 +164,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # User-uploaded files (item images, later guest photos)
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.environ.get("DJANGO_MEDIA_ROOT", BASE_DIR / "media")
+
+
+# HTTPS: switched on in production once the certificate exists (Step 8c).
+USE_HTTPS = os.environ.get("DJANGO_HTTPS", "False") == "True"
+if USE_HTTPS:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600  # raise to 31536000 (one year) once everything is stable
