@@ -1,61 +1,138 @@
-{% extends "base.html" %} {% block title %}MomentSnap · Guest photo sharing for
-weddings and events{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}MomentSnap · {% translate "Guest photo sharing for weddings and events" %}{% endblock %}
+
+{% block content %}
+
 <section class="hero py-5">
   <div class="container py-lg-5">
-    <div class="row">
-      <div class="col-lg-8">
-        <h1 class="display-5 fw-bold">Every guest, a photographer.</h1>
-        <p class="lead my-4">
-          Put a QR code on every table. Your guests scan it, take on fun photo
-          challenges and upload their shots, and you get every moment of your
-          day in one private gallery.
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-7">
+        <p class="eyebrow mb-3">{% translate "Guest photo sharing for weddings and events" %}</p>
+        <h1 class="display-4 fw-bold mb-4">{% translate "Every guest, a photographer." %}</h1>
+        <p class="lead text-body-secondary mb-4">
+          {% blocktranslate trimmed %}
+            Put a QR code on every table. Guests scan it, take on photo challenges
+            that unlock through the night, and every shot lands in your private gallery.
+          {% endblocktranslate %}
         </p>
-        <a class="btn btn-primary btn-lg" href="#how-it-works"
-          >See how it works</a
-        >
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary btn-lg" href="{% url 'catalog:item_list' %}">{% translate "Browse the shop" %}</a>
+          <a class="btn btn-outline-primary btn-lg" href="#how-it-works">{% translate "How it works" %}</a>
+        </div>
       </div>
+
+      <div class="col-lg-5">
+        <figure class="phone-preview mb-0">
+          <figcaption class="visually-hidden">{% translate "Example of what guests see after scanning the QR code" %}</figcaption>
+          <p class="font-display fs-5 fw-bold text-center mb-1">{% translate "Maria & Nikos" %}</p>
+          <p class="small text-body-secondary text-center mb-3">{% translate "2 h 14 min left · 3 of 5 photos this hour" %}</p>
+
+          <div class="challenge-card p-3 mb-3">
+            <span class="badge badge-brand rounded-pill mb-2">{% translate "New challenge" %}</span>
+            <p class="fw-semibold mb-3">{% translate "Who do you think the next bride will be?" %}</p>
+            <span class="btn btn-primary w-100 pe-none" aria-hidden="true">{% translate "Take or upload a photo" %}</span>
+          </div>
+
+          <div class="d-flex align-items-center gap-2 border rounded-3 p-3 small text-body-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+              <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+            </svg>
+            {% translate "Next challenge at 22:00" %}
+          </div>
+        </figure>
+      </div>
+
     </div>
   </div>
 </section>
 
 <section id="how-it-works" class="py-5" aria-labelledby="how-title">
-  <div class="container">
-    <h2 id="how-title" class="h3 mb-4">How it works</h2>
+  <div class="container py-lg-4">
+    <h2 id="how-title" class="font-display fw-bold mb-4">{% translate "How it works" %}</h2>
+    <ol class="row g-4 list-unstyled mb-0">
+      <li class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body p-4">
+            <p class="step-number mb-3" aria-hidden="true">1</p>
+            <h3 class="h5 card-title">{% translate "Choose a package" %}</h3>
+            <p class="card-text text-body-secondary">{% translate "Pick the event package, table cards and album that fit your celebration." %}</p>
+          </div>
+        </div>
+      </li>
+      <li class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body p-4">
+            <p class="step-number mb-3" aria-hidden="true">2</p>
+            <h3 class="h5 card-title">{% translate "Set the night up" %}</h3>
+            <p class="card-text text-body-secondary">{% translate "Write your welcome, plan challenges that unlock hour by hour, and print the QR code for every table." %}</p>
+          </div>
+        </div>
+      </li>
+      <li class="col-md-4">
+        <div class="card h-100">
+          <div class="card-body p-4">
+            <p class="step-number mb-3" aria-hidden="true">3</p>
+            <h3 class="h5 card-title">{% translate "Collect every moment" %}</h3>
+            <p class="card-text text-body-secondary">{% translate "Guests upload from their phones with no app and no account. You approve, favourite and keep the gallery." %}</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="py-5 bg-body text-body" data-bs-theme="dark" aria-labelledby="night-title">
+  <div class="container py-lg-4">
+    <h2 id="night-title" class="font-display fw-bold mb-2">{% translate "Built for the whole night" %}</h2>
+    <p class="lead text-body-secondary mb-5">{% translate "Not a shared folder: a game your guests play from the first toast to the last dance." %}</p>
     <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h3 class="h5 card-title">1. Choose a package</h3>
-            <p class="card-text">
-              Pick the event package, table cards and album that fit your
-              celebration.
-            </p>
-          </div>
-        </div>
+      <div class="col-sm-6 col-lg-3">
+        <h3 class="h6 text-brand-soft">{% translate "Timed challenges" %}</h3>
+        <p class="text-body-secondary mb-0">{% translate "New prompts unlock at the times you choose, so everyone plays together." %}</p>
       </div>
-      <div class="col-md-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h3 class="h5 card-title">2. Place the QR cards</h3>
-            <p class="card-text">
-              Set up your event and its photo challenges, then print your QR
-              code for every table.
-            </p>
-          </div>
-        </div>
+      <div class="col-sm-6 col-lg-3">
+        <h3 class="h6 text-brand-soft">{% translate "Photos per hour" %}</h3>
+        <p class="text-body-secondary mb-0">{% translate "You set how many photos each guest can send per hour. Fewer, better shots." %}</p>
       </div>
-      <div class="col-md-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h3 class="h5 card-title">3. Collect every moment</h3>
-            <p class="card-text">
-              Guests upload from their phones, with no app and no account. You
-              keep the gallery.
-            </p>
-          </div>
-        </div>
+      <div class="col-sm-6 col-lg-3">
+        <h3 class="h6 text-brand-soft">{% translate "Private by default" %}</h3>
+        <p class="text-body-secondary mb-0">{% translate "Only you see the gallery. Guests get a thank-you, not everyone's photos." %}</p>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <h3 class="h6 text-brand-soft">{% translate "Approve and favourite" %}</h3>
+        <p class="text-body-secondary mb-0">{% translate "Hide what you don't want and star the shots for your printed album." %}</p>
       </div>
     </div>
   </div>
 </section>
+
+<section class="py-5" aria-labelledby="shop-title">
+  <div class="container py-lg-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-baseline gap-2 mb-4">
+      <h2 id="shop-title" class="font-display fw-bold mb-0">{% translate "Shop the collection" %}</h2>
+      <a href="{% url 'catalog:item_list' %}" class="fw-semibold">{% translate "Browse all products" %}</a>
+    </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 g-lg-4">
+      {% for category in categories %}
+        <div class="col">
+          <a href="{{ category.get_absolute_url }}" class="category-tile card h-100 border-0 text-reset text-decoration-none">
+            <div class="card-body p-4">
+              <h3 class="h6 fw-semibold mb-1">{{ category.name }}</h3>
+              {% if category.description %}
+                <p class="small text-body-secondary mb-0">{{ category.description }}</p>
+              {% endif %}
+            </div>
+          </a>
+        </div>
+      {% empty %}
+        <p class="text-body-secondary">{% translate "Categories are coming soon." %}</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 {% endblock %}

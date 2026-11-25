@@ -1,6 +1,7 @@
 /* MomentSnap design tokens: every brand colour and font lives here, nowhere else. */
 :root {
   --ms-brand: #8a3b5c;
+  --ms-brand-soft: #f3c6d8;
   --ms-brand-dark: #6f2f4a;
   --ms-brand-tint: #f8f1f4;
   --ms-on-brand: #ffffff;
@@ -46,4 +47,71 @@ h1, .display-5, .navbar-brand, .font-display {
   --bs-pagination-hover-color: var(--ms-brand-dark);
   --bs-pagination-active-bg: var(--ms-brand);
   --bs-pagination-active-border-color: var(--ms-brand);
+}
+
+/* Outline button in brand colours */
+.btn-outline-primary {
+  --bs-btn-color: var(--ms-brand);
+  --bs-btn-border-color: var(--ms-brand);
+  --bs-btn-hover-color: var(--ms-on-brand);
+  --bs-btn-hover-bg: var(--ms-brand);
+  --bs-btn-hover-border-color: var(--ms-brand);
+  --bs-btn-active-color: var(--ms-on-brand);
+  --bs-btn-active-bg: var(--ms-brand-dark);
+  --bs-btn-active-border-color: var(--ms-brand-dark);
+}
+
+/* Small coloured label above a heading */
+.eyebrow {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ms-brand);
+}
+
+.text-brand-soft {
+  color: var(--ms-brand-soft);
+}
+
+.badge-brand {
+  background-color: var(--ms-brand);
+  color: var(--ms-on-brand);
+}
+
+/* Phone preview in the hero */
+.phone-preview {
+  max-width: 280px;
+  margin-inline: auto;
+  padding: 1.25rem 1rem 1.5rem;
+  border: 10px solid var(--bs-emphasis-color);
+  border-radius: 36px;
+  background-color: var(--bs-body-bg);
+}
+
+.challenge-card {
+  border: 2px solid var(--ms-brand);
+  border-radius: 14px;
+}
+
+/* Big number for the "How it works" steps */
+.step-number {
+  font-family: var(--ms-font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--ms-brand);
+}
+
+/* Category tiles on the home page */
+.category-tile {
+  background-color: var(--ms-brand-tint);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .category-tile {
+    transition: transform 0.15s ease;
+  }
+  .category-tile:hover {
+    transform: translateY(-3px);
+  }
 }
