@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import Item
 
+from core.forms import BootstrapFormMixin
+
 # Items marked "Any event" suit every event, so "Any" isn't offered as a filter value.
 EVENT_TYPE_CHOICES = [("", _("All event types"))] + [
     choice for choice in Item.EventType.choices if choice[0] != Item.EventType.ANY
@@ -16,7 +18,7 @@ SORT_CHOICES = [
 ]
 
 
-class ItemFilterForm(forms.Form):
+class ItemFilterForm(BootstrapFormMixin, forms.Form):
     """Search and filter form for the shop. Submitted with GET, so results can be bookmarked."""
 
     q = forms.CharField(label=_("Search by name"), required=False, max_length=100)
@@ -25,13 +27,6 @@ class ItemFilterForm(forms.Form):
     min_price = forms.DecimalField(label=_("Min price (€)"), required=False, min_value=0, decimal_places=2)
     max_price = forms.DecimalField(label=_("Max price (€)"), required=False, min_value=0, decimal_places=2)
     sort = forms.ChoiceField(label=_("Sort by"), required=False, choices=SORT_CHOICES)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Give every field its Bootstrap class once, instead of repeating it per field.
-        for field in self.fields.values():
-            is_select = isinstance(field.widget, forms.Select)
-            field.widget.attrs["class"] = "form-select" if is_select else "form-control"
 
     def clean(self):
         """Check rules that involve more than one field."""

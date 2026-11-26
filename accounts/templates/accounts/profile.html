@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "My profile" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h2 mb-1">{% translate "My profile" %}</h1>
+      <p class="text-body-secondary mb-4">
+        {% blocktranslate with username=user.username date=user.date_joined|date:"j F Y" %}Signed in as {{ username }} · member since {{ date }}{% endblocktranslate %}
+      </p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "partials/_form_fields.html" %}
+        <button type="submit" class="btn btn-primary">{% translate "Save changes" %}</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

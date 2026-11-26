@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Create your account" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h2 mb-2">{% translate "Create your account" %}</h1>
+      <p class="text-body-secondary mb-4">
+        {% translate "Already have an account?" %} <a href="{% url 'accounts:login' %}">{% translate "Log in" %}</a>
+      </p>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "partials/_form_fields.html" %}
+        <button type="submit" class="btn btn-primary w-100">{% translate "Sign up" %}</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
