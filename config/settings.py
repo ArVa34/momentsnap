@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "accounts",
     "core",
     "catalog",
+    "backoffice",
 
     # Django apps
     "django.contrib.admin",
