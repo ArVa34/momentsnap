@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Page not found" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<section class="container py-5 text-center">
+  <p class="eyebrow mb-2">404</p>
+  <h1 class="mb-3">{% translate "We couldn't find that page" %}</h1>
+  <p class="lead text-body-secondary mb-4">{% translate "The link may be old, or the page may have moved." %}</p>
+  <div class="d-flex flex-wrap justify-content-center gap-2">
+    <a class="btn btn-primary" href="{% url 'core:home' %}">{% translate "Go to the home page" %}</a>
+    <a class="btn btn-outline-primary" href="{% url 'catalog:item_list' %}">{% translate "Browse the shop" %}</a>
+  </div>
+</section>
+{% endblock %}

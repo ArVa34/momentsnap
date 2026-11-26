@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Access denied" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<section class="container py-5 text-center">
+  <p class="eyebrow mb-2">403</p>
+  <h1 class="mb-3">{% translate "You don't have access to this page" %}</h1>
+  <p class="lead text-body-secondary mb-4">{% translate "If you think this is a mistake, log in with a different account or contact us." %}</p>
+  <a class="btn btn-primary" href="{% url 'core:home' %}">{% translate "Go to the home page" %}</a>
+</section>
+{% endblock %}
