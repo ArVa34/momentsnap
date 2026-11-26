@@ -5,9 +5,30 @@ from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
+from django.db.models import Max
+from catalog.models import Item
 
 from .forms import LoginForm, ProfileForm, SignUpForm
 
+@login_required
+def dashboard(request):
+    """The logged-in user's own overview: recently viewed items and recent searches."""
+    recently_viewed = (
+        Item.objects.filter(views__user=request.user, is_active=True)
+        .annotate(last_viewed=Max("views__viewed_at"))
+        .select_related("category")
+        .order_by("-last_viewed")[:6]
+    )
+    recent_searches = (
+        request.user.searches.order_by()
+        .values("term")
+        .annotate(last_searched=Max("searched_at"))
+        .order_by("-last_searched")[:5]
+    )
+    return render(request, "accounts/dashboard.html", {
+        "recently_viewed": recently_viewed,
+        "recent_searches": recent_searches,
+    })
 
 def safe_next_url(request, fallback="core:home"):
     """Return the ?next= address only if it points to our own site, otherwise the fallback."""
@@ -46,7 +67,7 @@ def login_view(request):
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect(safe_next_url(request))
+            return redirect(safe_next_url(request, fallback="accounts:dashboard"))
     else:
         form = LoginForm(request)
 

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Manage" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="h2 mb-4">{% translate "Manage MomentSnap" %}</h1>
+
+  <div class="row row-cols-2 row-cols-lg-4 g-3 mb-4">
+    {% for label, count in stats %}
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <p class="small text-body-secondary mb-1">{{ label }}</p>
+            <p class="fs-3 fw-semibold mb-0">{{ count }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <p class="text-body-secondary">
+    {% translate "Our own management pages for products, categories and users are being built. Until then, use the" %}
+    <a href="{% url 'admin:index' %}">{% translate "Django admin" %}</a>.
+  </p>
+</div>
+{% endblock %}

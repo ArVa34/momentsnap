@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.translation import gettext as _
 
 from .forms import ItemFilterForm
-from .models import Category, Item, SearchQuery
+from .models import Category, Item, ItemView, SearchQuery
 
 ITEMS_PER_PAGE = 9
 
@@ -77,10 +77,14 @@ def item_list(request, category_slug=None):
 
 
 def item_detail(request, slug):
-    """Show one active item."""
+    """Show one active item and record the visit."""
     item = get_object_or_404(
         Item.objects.select_related("category__parent"),
         slug=slug,
         is_active=True,
+    )
+    ItemView.objects.create(
+        item=item,
+        user=request.user if request.user.is_authenticated else None,
     )
     return render(request, "catalog/item_detail.html", {"item": item})

@@ -25,6 +25,7 @@ urlpatterns = [
     path("", include("core.urls")),
     path("", include("catalog.urls")),
     path("accounts/", include("accounts.urls")),
+    path("manage/", include("backoffice.urls")),
 ]
 
 # Only while developing: let Django serve uploaded files.

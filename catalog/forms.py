@@ -1,9 +1,9 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from .models import Item
-
 from core.forms import BootstrapFormMixin
+
+from .models import Item
 
 # Items marked "Any event" suit every event, so "Any" isn't offered as a filter value.
 EVENT_TYPE_CHOICES = [("", _("All event types"))] + [

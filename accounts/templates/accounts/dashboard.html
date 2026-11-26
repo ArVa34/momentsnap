@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "My dashboard" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+      <h1 class="h2 mb-1">{% blocktranslate with name=user.first_name|default:user.username %}Hello, {{ name }}{% endblocktranslate %}</h1>
+      {% if is_administrator %}
+        <span class="badge badge-brand rounded-pill">{% translate "Administrator" %}</span>
+      {% elif is_event_host %}
+        <span class="badge badge-brand rounded-pill">{% translate "Event host" %}</span>
+      {% endif %}
+    </div>
+    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-primary">{% translate "Edit my profile" %}</a>
+  </div>
+
+  <section class="mb-5" aria-labelledby="viewed-title">
+    <h2 id="viewed-title" class="h4 mb-3">{% translate "Recently viewed" %}</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+      {% for item in recently_viewed %}
+        <div class="col">
+          {% include "catalog/partials/_item_card.html" %}
+        </div>
+      {% empty %}
+        <p class="text-body-secondary">{% translate "Products you look at in the shop will appear here." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section aria-labelledby="searches-title">
+    <h2 id="searches-title" class="h4 mb-3">{% translate "Your recent searches" %}</h2>
+    {% if recent_searches %}
+      <ul class="list-inline mb-0">
+        {% for search in recent_searches %}
+          <li class="list-inline-item mb-2">
+            <a class="btn btn-sm btn-outline-secondary" href="{% url 'catalog:item_list' %}?q={{ search.term|urlencode }}">{{ search.term }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-body-secondary">{% translate "Your searches will appear here, so you can repeat them in one click." %}</p>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

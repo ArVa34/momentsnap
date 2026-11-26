@@ -121,3 +121,23 @@ class SearchQuery(models.Model):
 
     def __str__(self):
         return f'"{self.term}" ({self.results_count} results)'
+
+
+class ItemView(models.Model):
+    """A visit to an item's page. Feeds the dashboard, recommendations and analytics."""
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="views")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="item_views",
+    )
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-viewed_at"]
+
+    def __str__(self):
+        return f"{self.item} at {self.viewed_at:%Y-%m-%d %H:%M}"
