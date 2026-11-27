@@ -18,6 +18,16 @@
     <a href="{% url 'accounts:profile' %}" class="btn btn-outline-primary">{% translate "Edit my profile" %}</a>
   </div>
 
+
+  <section class="mb-5" aria-labelledby="orders-title">
+    <div class="d-flex justify-content-between align-items-baseline mb-3">
+      <h2 id="orders-title" class="h4 mb-0">{% translate "Recent orders" %}</h2>
+      <a href="{% url 'orders:order_list' %}">{% translate "All orders" %}</a>
+    </div>
+    {% include "orders/partials/_order_table.html" %}
+  </section>
+
+  
   <section class="mb-5" aria-labelledby="viewed-title">
     <h2 id="viewed-title" class="h4 mb-3">{% translate "Recently viewed" %}</h2>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">

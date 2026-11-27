@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "My orders" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="h2 mb-4">{% translate "My orders" %}</h1>
+  {% include "orders/partials/_order_table.html" %}
+</div>
+{% endblock %}

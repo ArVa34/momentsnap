@@ -28,7 +28,9 @@ def dashboard(request):
     return render(request, "accounts/dashboard.html", {
         "recently_viewed": recently_viewed,
         "recent_searches": recent_searches,
+        "orders": request.user.orders.all()[:3],
     })
+
 
 def safe_next_url(request, fallback="core:home"):
     """Return the ?next= address only if it points to our own site, otherwise the fallback."""

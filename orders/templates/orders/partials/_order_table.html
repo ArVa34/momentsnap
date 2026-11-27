@@ -1,0 +1,29 @@
+{% load i18n %}
+{# A table of orders with links. Expects `orders`. #}
+{% if orders %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <caption class="visually-hidden">{% translate "Your orders" %}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{% translate "Order" %}</th>
+          <th scope="col">{% translate "Date" %}</th>
+          <th scope="col">{% translate "Status" %}</th>
+          <th scope="col" class="text-end">{% translate "Total" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td><a href="{{ order.get_absolute_url }}">#{{ order.pk }}</a></td>
+            <td>{{ order.created_at|date:"j M Y" }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td class="text-end">€{{ order.total }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="text-body-secondary">{% translate "You haven't placed any orders yet." %}</p>
+{% endif %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ order }} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <nav aria-label="{% translate 'Breadcrumb' %}">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">{% translate "My account" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'orders:order_list' %}">{% translate "My orders" %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% blocktranslate with number=order.pk %}Order #{{ number }}{% endblocktranslate %}</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="h2 mb-0">{% blocktranslate with number=order.pk %}Order #{{ number }}{% endblocktranslate %}</h1>
+    <span class="badge badge-brand rounded-pill fs-6">{{ order.get_status_display }}</span>
+  </div>
+
+  <div class="row g-4 g-lg-5">
+    <div class="col-lg-8">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <caption class="visually-hidden">{% translate "Products in this order" %}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{% translate "Product" %}</th>
+              <th scope="col" class="text-end">{% translate "Price" %}</th>
+              <th scope="col" class="text-end">{% translate "Quantity" %}</th>
+              <th scope="col" class="text-end">{% translate "Total" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for line in order.lines.all %}
+              <tr>
+                <td>{{ line.item_name }}</td>
+                <td class="text-end">€{{ line.unit_price }}</td>
+                <td class="text-end">{{ line.quantity }}</td>
+                <td class="text-end">€{{ line.line_total }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="3" class="text-end">{% translate "Total" %}</th>
+              <td class="text-end fw-bold">€{{ order.total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <aside class="col-lg-4">
+      <dl>
+        <dt>{% translate "Placed on" %}</dt>
+        <dd>{{ order.created_at|date:"j F Y, H:i" }}</dd>
+        <dt>{% translate "Deliver to" %}</dt>
+        <dd>{{ order.full_name }}<br>{{ order.address }}<br>{{ order.postal_code }} {{ order.city }}</dd>
+        <dt>{% translate "Contact" %}</dt>
+        <dd>{{ order.email }}<br>{{ order.phone }}</dd>
+        <dt>{% translate "Payment reference" %}</dt>
+        <dd><code>{{ order.payment_reference }}</code></dd>
+      </dl>
+    </aside>
+  </div>
+</div>
+{% endblock %}

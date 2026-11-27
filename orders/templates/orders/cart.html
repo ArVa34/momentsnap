@@ -58,7 +58,10 @@
       </table>
     </div>
 
-    <a href="{% url 'catalog:item_list' %}" class="btn btn-outline-primary">{% translate "Continue shopping" %}</a>
+    <div class="d-flex flex-wrap justify-content-between gap-2">
+      <a href="{% url 'catalog:item_list' %}" class="btn btn-outline-primary">{% translate "Continue shopping" %}</a>
+      <a href="{% url 'orders:checkout' %}" class="btn btn-primary">{% translate "Proceed to checkout" %}</a>
+    </div>
   {% else %}
     <p class="text-body-secondary">{% translate "Your cart is empty." %}</p>
     <a href="{% url 'catalog:item_list' %}" class="btn btn-primary">{% translate "Browse the shop" %}</a>
