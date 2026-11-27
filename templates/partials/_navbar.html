@@ -19,8 +19,16 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'core:home' %}#how-it-works">{% translate "How it works" %}</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'orders:cart' %}">
+              {% translate "Cart" %}
+              {% if cart_count %}
+                <span class="badge badge-brand rounded-pill">{{ cart_count }}<span class="visually-hidden"> {% translate "items" %}</span></span>
+              {% endif %}
+            </a>
+          </li>
           {% if user.is_authenticated %}
-                        <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:dashboard' %}">{% translate "My account" %}</a>
             </li>
             <li class="nav-item">

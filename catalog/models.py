@@ -89,6 +89,11 @@ class Item(models.Model):
     )
     style = models.CharField(max_length=20, choices=Style.choices, blank=True)
     is_active = models.BooleanField(default=True)
+    is_event_package = models.BooleanField(
+        _("event package"),
+        default=False,
+        help_text=_("Buying this product makes the customer an Event host."),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

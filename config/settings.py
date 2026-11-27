@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "core",
     "catalog",
     "backoffice",
+    "orders",
 
     # Django apps
     "django.contrib.admin",
@@ -94,6 +95,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 "accounts.context_processors.roles",
+                "orders.context_processors.cart",
             ],
         },
     },

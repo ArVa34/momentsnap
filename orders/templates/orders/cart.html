@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Your cart" %} · MomentSnap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="h2 mb-4">{% translate "Your cart" %}</h1>
+
+  {% if lines %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <caption class="visually-hidden">{% translate "Products in your cart" %}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{% translate "Product" %}</th>
+            <th scope="col" class="text-end">{% translate "Price" %}</th>
+            <th scope="col">{% translate "Quantity" %}</th>
+            <th scope="col" class="text-end">{% translate "Total" %}</th>
+            <th scope="col"><span class="visually-hidden">{% translate "Actions" %}</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for line in lines %}
+            <tr>
+              <td>
+                <a href="{{ line.item.get_absolute_url }}">{{ line.item.name }}</a>
+                {% if not line.available %}
+                  <div class="small text-danger">{% blocktranslate with stock=line.item.stock %}Only {{ stock }} left in stock.{% endblocktranslate %}</div>
+                {% endif %}
+              </td>
+              <td class="text-end">€{{ line.item.price }}</td>
+              <td>
+                <form method="post" action="{% url 'orders:cart_update' line.item.pk %}" class="d-flex gap-2">
+                  {% csrf_token %}
+                  <label for="qty-{{ line.item.pk }}" class="visually-hidden">{% blocktranslate with name=line.item.name %}Quantity of {{ name }}{% endblocktranslate %}</label>
+                  <input type="number" id="qty-{{ line.item.pk }}" name="quantity" value="{{ line.quantity }}" min="1" max="{{ cart_max_quantity }}" class="form-control form-control-sm w-auto">
+                  <button type="submit" class="btn btn-sm btn-outline-secondary">{% translate "Update" %}</button>
+                </form>
+              </td>
+              <td class="text-end fw-semibold">€{{ line.line_total }}</td>
+              <td class="text-end">
+                <form method="post" action="{% url 'orders:cart_remove' line.item.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-link text-danger">{% translate "Remove" %}</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row" colspan="3" class="text-end">{% translate "Total" %}</th>
+            <td class="text-end fs-5 fw-bold">€{{ total }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <a href="{% url 'catalog:item_list' %}" class="btn btn-outline-primary">{% translate "Continue shopping" %}</a>
+  {% else %}
+    <p class="text-body-secondary">{% translate "Your cart is empty." %}</p>
+    <a href="{% url 'catalog:item_list' %}" class="btn btn-primary">{% translate "Browse the shop" %}</a>
+  {% endif %}
+</div>
+{% endblock %}
