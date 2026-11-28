@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Item, ItemView, SearchQuery
+from .models import Category, Item, ItemView, SearchQuery , Rating
 
 
 
@@ -31,3 +31,10 @@ class SearchQueryAdmin(admin.ModelAdmin):
 class ItemViewAdmin(admin.ModelAdmin):
     list_display = ["item", "user", "viewed_at"]
     list_filter = ["viewed_at"]
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ["item", "user", "stars", "updated_at"]
+    list_filter = ["stars", "updated_at"]
+    search_fields = ["item__name", "user__username", "review"]

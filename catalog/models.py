@@ -3,7 +3,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
-from django.core.validators import FileExtensionValidator, MinValueValidator
+from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -146,3 +146,24 @@ class ItemView(models.Model):
 
     def __str__(self):
         return f"{self.item} at {self.viewed_at:%Y-%m-%d %H:%M}"
+
+class Rating(models.Model):
+    """One user's star rating, with an optional review, of one product. One per user per product."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ratings")
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="ratings")
+    stars = models.PositiveSmallIntegerField(
+        _("stars"), validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    review = models.TextField(_("review"), max_length=1000, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-updated_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "item"], name="one_rating_per_user_per_item"),
+        ]
+
+    def __str__(self):
+        return f"{self.user} → {self.item}: {self.stars}"

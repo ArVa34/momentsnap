@@ -1,10 +1,10 @@
-from .models import Order
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from core.forms import BootstrapFormMixin
 
 from .cart import MAX_QUANTITY
+from .models import Order
 
 
 class CartQuantityForm(BootstrapFormMixin, forms.Form):

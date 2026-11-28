@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{{ item.name }} · MomentSnap{% endblock %}
 {% block meta_description %}{{ item.description|truncatewords:25 }}{% endblock %}
@@ -55,9 +55,64 @@
         <p class="text-body-secondary mb-4">{% translate "This product is currently out of stock." %}</p>
       {% endif %}
 
-      <div class="mt-4">{{ item.description|linebreaks }}</div>
+            <div class="mt-4">{{ item.description|linebreaks }}</div>
     </div>
   </div>
 
+  <section class="mt-5" aria-labelledby="ratings-title">
+    <h2 id="ratings-title" class="h4 mb-3">{% translate "Ratings and reviews" %}</h2>
+    <p class="fs-5 mb-4">
+      <span aria-hidden="true">★</span>
+      <span data-rating-average>{{ rating.average }}</span> / 5
+      · <span class="text-body-secondary" data-rating-count>{{ rating.count_label }}</span>
+    </p>
+
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'catalog:rate_item' item.pk %}" class="card card-body mb-4"
+            data-rating-form data-network-error="{% translate 'Something went wrong. Please try again.' %}">
+        {% csrf_token %}
+        <fieldset class="mb-3">
+          <legend class="form-label fs-6 mb-2">
+            {% if own_rating %}{% translate "Your rating (you can change it)" %}{% else %}{% translate "Your rating" %}{% endif %}
+          </legend>
+          <div class="d-flex flex-wrap gap-2">
+            {% for radio in rating_form.stars %}
+              {{ radio.tag }}
+              <label for="{{ radio.id_for_label }}" class="btn btn-outline-primary">
+                {{ radio.choice_label }} <span aria-hidden="true">★</span><span class="visually-hidden">{% translate "out of 5" %}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+        <div class="mb-3">
+          <label for="{{ rating_form.review.id_for_label }}" class="form-label">{% translate "Review (optional)" %}</label>
+          {{ rating_form.review }}
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary">{% translate "Save my rating" %}</button>
+        </div>
+        <p class="small mt-2 mb-0" data-rating-status role="status" aria-live="polite"></p>
+      </form>
+    {% else %}
+      <p><a href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">{% translate "Log in to rate this product" %}</a></p>
+    {% endif %}
+
+    {% for review in reviews %}
+      <article class="border-top py-3">
+        <p class="mb-1">
+          <strong>{{ review.user.first_name|default:review.user.username }}</strong>
+          · {{ review.stars }} <span aria-hidden="true">★</span><span class="visually-hidden">{% translate "out of 5" %}</span>
+        </p>
+        <p class="mb-0">{{ review.review|linebreaksbr }}</p>
+      </article>
+    {% empty %}
+      <p class="text-body-secondary">{% translate "No written reviews yet." %}</p>
+    {% endfor %}
+  </section>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/ratings.js' %}" defer></script>
 {% endblock %}

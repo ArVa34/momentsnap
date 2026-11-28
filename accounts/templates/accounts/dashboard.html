@@ -56,5 +56,21 @@
     {% endif %}
   </section>
 
+    <section class="mt-5" aria-labelledby="ratings-title">
+    <h2 id="ratings-title" class="h4 mb-3">{% translate "Your ratings" %}</h2>
+    {% if my_ratings %}
+      <ul class="list-unstyled mb-0">
+        {% for rating in my_ratings %}
+          <li class="mb-2">
+            <a href="{{ rating.item.get_absolute_url }}">{{ rating.item.name }}</a>
+            · {{ rating.stars }} <span aria-hidden="true">★</span><span class="visually-hidden">{% translate "out of 5" %}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-body-secondary">{% translate "Products you rate will appear here." %}</p>
+    {% endif %}
+  </section>
+
 </div>
 {% endblock %}

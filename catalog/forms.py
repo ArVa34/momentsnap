@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from core.forms import BootstrapFormMixin
 
-from .models import Item
+from .models import Item, Rating
 
 # Items marked "Any event" suit every event, so "Any" isn't offered as a filter value.
 EVENT_TYPE_CHOICES = [("", _("All event types"))] + [
@@ -36,3 +36,19 @@ class ItemFilterForm(BootstrapFormMixin, forms.Form):
         if low is not None and high is not None and low > high:
             raise forms.ValidationError(_("The minimum price can't be higher than the maximum price."))
         return cleaned_data
+
+
+class RatingForm(BootstrapFormMixin, forms.ModelForm):
+    """1–5 stars and an optional review."""
+
+    stars = forms.TypedChoiceField(
+        label=_("Stars"),
+        choices=[(n, str(n)) for n in range(1, 6)],
+        coerce=int,
+        widget=forms.RadioSelect(attrs={"class": "btn-check"}),
+    )
+
+    class Meta:
+        model = Rating
+        fields = ["stars", "review"]
+        widgets = {"review": forms.Textarea(attrs={"rows": 3})}

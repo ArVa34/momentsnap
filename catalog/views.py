@@ -1,10 +1,15 @@
+from django.contrib import messages
+from django.contrib.auth.views import redirect_to_login
 from django.core.paginator import Paginator
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, render
+from django.db.models import Avg, Count, Q
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
+from django.views.decorators.http import require_POST
 
-from .forms import ItemFilterForm
-from .models import Category, Item, ItemView, SearchQuery
+from .forms import ItemFilterForm, RatingForm
+from .models import Category, Item, ItemView, Rating, SearchQuery
 
 ITEMS_PER_PAGE = 9
 
@@ -76,8 +81,17 @@ def item_list(request, category_slug=None):
     })
 
 
+def rating_summary(item):
+    """Average stars and a translated count for an item, e.g. {"average": "4.3", "count_label": "3 ratings"}."""
+    result = item.ratings.aggregate(average=Avg("stars"), count=Count("id"))
+    count = result["count"]
+    average = f"{result['average']:.1f}" if count else "–"
+    count_label = ngettext("%(count)s rating", "%(count)s ratings", count) % {"count": count}
+    return {"average": average, "count_label": count_label}
+
+
 def item_detail(request, slug):
-    """Show one active item and record the visit."""
+    """Show one active item with its ratings, and record the visit."""
     item = get_object_or_404(
         Item.objects.select_related("category__parent"),
         slug=slug,
@@ -87,4 +101,47 @@ def item_detail(request, slug):
         item=item,
         user=request.user if request.user.is_authenticated else None,
     )
-    return render(request, "catalog/item_detail.html", {"item": item})
+
+    context = {
+        "item": item,
+        "rating": rating_summary(item),
+        "reviews": item.ratings.exclude(review="").select_related("user")[:10],
+    }
+    if request.user.is_authenticated:
+        own_rating = item.ratings.filter(user=request.user).first()
+        context["own_rating"] = own_rating
+        context["rating_form"] = RatingForm(instance=own_rating)
+
+    return render(request, "catalog/item_detail.html", context)
+
+
+@require_POST
+def rate_item(request, item_id):
+    """Save the user's rating. Answers JSON to fetch() requests, or redirects after a normal form post."""
+    item = get_object_or_404(Item, pk=item_id, is_active=True)
+    wants_json = "application/json" in request.headers.get("Accept", "")
+
+    if not request.user.is_authenticated:
+        if wants_json:
+            return JsonResponse({"error": _("Please log in to rate products.")}, status=401)
+        return redirect_to_login(item.get_absolute_url())
+
+    form = RatingForm(request.POST)
+    if not form.is_valid():
+        error = _("Please choose between 1 and 5 stars.")
+        if wants_json:
+            return JsonResponse({"error": error}, status=400)
+        messages.error(request, error)
+        return redirect(item.get_absolute_url())
+
+    Rating.objects.update_or_create(
+        user=request.user,
+        item=item,
+        defaults={"stars": form.cleaned_data["stars"], "review": form.cleaned_data["review"]},
+    )
+
+    message = _("Thank you! Your rating was saved.")
+    if wants_json:
+        return JsonResponse({"message": message, **rating_summary(item)})
+    messages.success(request, message)
+    return redirect(item.get_absolute_url())

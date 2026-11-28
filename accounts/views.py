@@ -29,6 +29,7 @@ def dashboard(request):
         "recently_viewed": recently_viewed,
         "recent_searches": recent_searches,
         "orders": request.user.orders.all()[:3],
+        "my_ratings": request.user.ratings.select_related("item")[:5],
     })
 
 
