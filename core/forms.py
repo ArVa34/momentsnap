@@ -7,7 +7,10 @@ class BootstrapFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            if isinstance(field.widget, forms.Select):
-                field.widget.attrs["class"] = "form-select"
+            widget = field.widget
+            if isinstance(widget, (forms.RadioSelect, forms.CheckboxInput)):
+                continue  # styled in the template instead
+            if isinstance(widget, forms.Select):
+                widget.attrs["class"] = "form-select"
             else:
-                field.widget.attrs["class"] = "form-control"
+                widget.attrs["class"] = "form-control"

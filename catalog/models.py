@@ -15,6 +15,7 @@ def item_image_path(instance, filename):
     extension = Path(filename).suffix.lower()
     return f"items/{uuid.uuid4().hex}{extension}"
 
+
 class Category(models.Model):
     """A catalogue category. A category with a parent is a sub-category."""
 
@@ -106,6 +107,7 @@ class Item(models.Model):
     def get_absolute_url(self):
         return reverse("catalog:item_detail", args=[self.slug])
 
+
 class SearchQuery(models.Model):
     """One search made in the shop. Feeds the analytics dashboard and recommendations."""
 
@@ -146,6 +148,7 @@ class ItemView(models.Model):
 
     def __str__(self):
         return f"{self.item} at {self.viewed_at:%Y-%m-%d %H:%M}"
+
 
 class Rating(models.Model):
     """One user's star rating, with an optional review, of one product. One per user per product."""

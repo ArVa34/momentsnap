@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Item, ItemView, SearchQuery , Rating
+from .models import Category, Item, ItemView, Rating, SearchQuery  
 
 
 
