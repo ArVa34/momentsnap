@@ -107,6 +107,11 @@ h1, .display-5, .navbar-brand, .font-display {
   background-color: var(--ms-brand-tint);
 }
 
+/* Cart quantity box: wide enough for two digits, never full width */
+.qty-input {
+  width: 5rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .category-tile {
     transition: transform 0.15s ease;

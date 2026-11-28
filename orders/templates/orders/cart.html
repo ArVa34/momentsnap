@@ -5,66 +5,54 @@
 
 {% block content %}
 <div class="container py-5">
-  <h1 class="h2 mb-4">{% translate "Your cart" %}</h1>
+  <div class="row">
+    <div class="col-lg-8">
+      <h1 class="h2 mb-4">{% translate "Your cart" %}</h1>
 
-  {% if lines %}
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <caption class="visually-hidden">{% translate "Products in your cart" %}</caption>
-        <thead>
-          <tr>
-            <th scope="col">{% translate "Product" %}</th>
-            <th scope="col" class="text-end">{% translate "Price" %}</th>
-            <th scope="col">{% translate "Quantity" %}</th>
-            <th scope="col" class="text-end">{% translate "Total" %}</th>
-            <th scope="col"><span class="visually-hidden">{% translate "Actions" %}</span></th>
-          </tr>
-        </thead>
-        <tbody>
+      {% if lines %}
+        <ul class="list-group mb-4" aria-label="{% translate 'Products in your cart' %}">
           {% for line in lines %}
-            <tr>
-              <td>
-                <a href="{{ line.item.get_absolute_url }}">{{ line.item.name }}</a>
-                {% if not line.available %}
-                  <div class="small text-danger">{% blocktranslate with stock=line.item.stock %}Only {{ stock }} left in stock.{% endblocktranslate %}</div>
-                {% endif %}
-              </td>
-              <td class="text-end">€{{ line.item.price }}</td>
-              <td>
+            <li class="list-group-item py-3">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <a href="{{ line.item.get_absolute_url }}" class="fw-semibold text-break">{{ line.item.name }}</a>
+                  <div class="small text-body-secondary">{% blocktranslate with price=line.item.price %}€{{ price }} each{% endblocktranslate %}</div>
+                  {% if not line.available %}
+                    <div class="small text-danger">{% blocktranslate with stock=line.item.stock %}Only {{ stock }} left in stock.{% endblocktranslate %}</div>
+                  {% endif %}
+                </div>
+                <span class="fw-semibold text-nowrap">€{{ line.line_total }}</span>
+              </div>
+
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
                 <form method="post" action="{% url 'orders:cart_update' line.item.pk %}" class="d-flex gap-2">
                   {% csrf_token %}
                   <label for="qty-{{ line.item.pk }}" class="visually-hidden">{% blocktranslate with name=line.item.name %}Quantity of {{ name }}{% endblocktranslate %}</label>
-                  <input type="number" id="qty-{{ line.item.pk }}" name="quantity" value="{{ line.quantity }}" min="1" max="{{ cart_max_quantity }}" class="form-control form-control-sm w-auto">
-                  <button type="submit" class="btn btn-sm btn-outline-secondary">{% translate "Update" %}</button>
+                  <input type="number" id="qty-{{ line.item.pk }}" name="quantity" value="{{ line.quantity }}" min="1" max="{{ cart_max_quantity }}" class="form-control qty-input">
+                  <button type="submit" class="btn btn-outline-secondary">{% translate "Update" %}</button>
                 </form>
-              </td>
-              <td class="text-end fw-semibold">€{{ line.line_total }}</td>
-              <td class="text-end">
                 <form method="post" action="{% url 'orders:cart_remove' line.item.pk %}">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-link text-danger">{% translate "Remove" %}</button>
+                  <button type="submit" class="btn btn-link text-danger px-0">{% translate "Remove" %}</button>
                 </form>
-              </td>
-            </tr>
+              </div>
+            </li>
           {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <th scope="row" colspan="3" class="text-end">{% translate "Total" %}</th>
-            <td class="text-end fs-5 fw-bold">€{{ total }}</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+          <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+            <span class="fw-semibold">{% translate "Total" %}</span>
+            <span class="fs-5 fw-bold">€{{ total }}</span>
+          </li>
+        </ul>
 
-    <div class="d-flex flex-wrap justify-content-between gap-2">
-      <a href="{% url 'catalog:item_list' %}" class="btn btn-outline-primary">{% translate "Continue shopping" %}</a>
-      <a href="{% url 'orders:checkout' %}" class="btn btn-primary">{% translate "Proceed to checkout" %}</a>
+        <div class="d-flex flex-wrap justify-content-between gap-2">
+          <a href="{% url 'catalog:item_list' %}" class="btn btn-outline-primary">{% translate "Continue shopping" %}</a>
+          <a href="{% url 'orders:checkout' %}" class="btn btn-primary">{% translate "Proceed to checkout" %}</a>
+        </div>
+      {% else %}
+        <p class="text-body-secondary">{% translate "Your cart is empty." %}</p>
+        <a href="{% url 'catalog:item_list' %}" class="btn btn-primary">{% translate "Browse the shop" %}</a>
+      {% endif %}
     </div>
-  {% else %}
-    <p class="text-body-secondary">{% translate "Your cart is empty." %}</p>
-    <a href="{% url 'catalog:item_list' %}" class="btn btn-primary">{% translate "Browse the shop" %}</a>
-  {% endif %}
+  </div>
 </div>
 {% endblock %}
